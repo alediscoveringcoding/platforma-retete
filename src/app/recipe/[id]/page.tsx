@@ -27,7 +27,7 @@ async function getRecipeDetails(id: string): Promise<RecipeDetails> {
 }
 
 export default async function RecipeDetailPage({ params }: { params: { id: string } }) {
-    // Am schimbat 'error' în '_error' pentru a semnala că nu este folosit
+
     try {
         const recipe = await getRecipeDetails(params.id);
         return (
@@ -42,34 +42,25 @@ export default async function RecipeDetailPage({ params }: { params: { id: strin
                         className="w-full h-auto rounded-lg shadow-lg mb-6"
                     />
                     <div className="flex justify-around bg-card p-4 rounded-lg mb-8 text-center">
-                        <div>
-                            <p className="text-sm opacity-70">Porții</p>
-                            <p className="text-2xl font-bold">{recipe.servings}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm opacity-70">Timp Total</p>
-                            <p className="text-2xl font-bold">{recipe.readyInMinutes} min</p>
-                        </div>
+                        <div><p className="text-sm opacity-70">Porții</p><p className="text-2xl font-bold">{recipe.servings}</p></div>
+                        <div><p className="text-sm opacity-70">Timp Total</p><p className="text-2xl font-bold">{recipe.readyInMinutes} min</p></div>
                     </div>
                     <div className="mb-8">
                         <h2 className="text-3xl font-heading font-semibold mb-4">Ingrediente</h2>
                         <ul className="list-disc list-inside bg-card p-6 rounded-lg border border-primary/20">
-                            {recipe.extendedIngredients.map((ingredient) => (
-                                <li key={ingredient.id} className="mb-2">{ingredient.original}</li>
-                            ))}
+                            {recipe.extendedIngredients.map((ingredient) => (<li key={ingredient.id} className="mb-2">{ingredient.original}</li>))}
                         </ul>
                     </div>
                     <div>
                         <h2 className="text-3xl font-heading font-semibold mb-4">Instrucțiuni</h2>
-                        <div
-                            className="prose prose-invert max-w-none bg-card p-6 rounded-lg border border-primary/20"
-                            dangerouslySetInnerHTML={{ __html: recipe.instructions }}
-                        />
+                        <div className="prose prose-invert max-w-none bg-card p-6 rounded-lg border border-primary/20" dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
                     </div>
                 </div>
             </main>
         );
-    } catch (_error) { // <-- AICI ESTE MODIFICAREA
+    } catch (_error) {
+        // Am adăugat această linie pentru a folosi variabila și a satisface regula ESLint
+        console.error("Eroare la preluarea detaliilor rețetei pe server:", _error);
         return (
             <main className="bg-background text-foreground min-h-screen flex items-center justify-center">
                 <div className="text-center p-8">
