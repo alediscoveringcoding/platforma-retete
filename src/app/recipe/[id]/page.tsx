@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 
 import Image from 'next/image';
 
+// Definim o interfață mai detaliată pentru o rețetă
 interface RecipeDetails {
     id: number;
     title: string;
@@ -16,6 +17,7 @@ interface RecipeDetails {
     }[];
 }
 
+// O funcție care preia detaliile unei rețete pe baza ID-ului
 async function getRecipeDetails(id: string): Promise<RecipeDetails> {
     const apiKey = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
     const url = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey}`;
@@ -26,7 +28,13 @@ async function getRecipeDetails(id: string): Promise<RecipeDetails> {
     return await response.json();
 }
 
-export default async function RecipeDetailPage({ params }: { params: { id: string } }) {
+// AICI ESTE PRIMA MODIFICARE: Definim formal tipul pentru Props
+type Props = {
+    params: { id: string };
+};
+
+// AICI ESTE A DOUA MODIFICARE: Folosim tipul "Props" în loc de a-l defini direct
+export default async function RecipeDetailPage({ params }: Props) {
 
     try {
         const recipe = await getRecipeDetails(params.id);
@@ -59,7 +67,6 @@ export default async function RecipeDetailPage({ params }: { params: { id: strin
             </main>
         );
     } catch (_error) {
-        // Am adăugat această linie pentru a folosi variabila și a satisface regula ESLint
         console.error("Eroare la preluarea detaliilor rețetei pe server:", _error);
         return (
             <main className="bg-background text-foreground min-h-screen flex items-center justify-center">
